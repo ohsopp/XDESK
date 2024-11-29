@@ -1,0 +1,33 @@
+{
+    "files": [
+        "FirstPage.qml",
+        "askRecogFaceId.qml",
+        "deskStandAdjust.qml",
+        "deskStandStore.qml",
+        "faceIdSignUp.qml",
+        "faceLoginFail.qml",
+        "faceLoginPage.qml",
+        "gesture.qml",
+        "loginPage.qml",
+        "main.py",
+        "main.qml",
+        "mainPage.qml",
+        "manualMode.qml",
+        "setDeskStandStore.qml",
+        "login.py",
+        "aiExample.qml",
+        "timerPage.qml",
+        "pyinterface.py",
+        "deskStandData.py",
+        "userData.py",
+        "warningPage.qml",
+        "manual.py",
+        "ModalHandler.py",
+        "userInfo.qml",
+        "gestureLoginPage.qml",
+        "ImageDialogPage.qml",
+        "LogoutDialogPage.qml",
+        "logout.py",
+        "monthGraph.py"
+    ]
+}

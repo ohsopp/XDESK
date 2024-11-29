@@ -1,0 +1,227 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /home/ubuntu/docker-project/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    networks:
+      - mynetwork
+
+  jenkins:
+    image: jenkins/jenkins:latest
+    container_name: jenkins
+    environment:
+      - JENKINS_OPTS=--prefix=/jenkins
+      - JENKINS_URL=https://i11a102.p.ssafy.io/jenkins/
+    volumes:
+      - /home/ubuntu/docker-project/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker 
+    user: root
+    networks:
+      - mynetwork
+
+  app:
+    image: cocoajoa/xfastapi:latest
+    env_file:
+      - .env
+    depends_on:
+      - central_db1
+      - central_db2
+      - central_db3
+      - mongos
+    expose:
+      - "8000"
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    networks:
+      - mynetwork
+  
+  central_db1:
+    image: mongo:latest
+    container_name: central_db1
+    command: ["mongod", "--replSet", "centralReplSet", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/central_db/central_data1:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  central_db2:
+    image: mongo:latest
+    container_name: central_db2
+    command: ["mongod", "--replSet", "centralReplSet", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/central_db/central_data2:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  central_db3:
+    image: mongo:latest
+    container_name: central_db3
+    command: ["mongod", "--replSet", "centralReplSet", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/central_db/central_data3:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  mongos:
+    image: mongo:latest
+    container_name: mongos
+    command: ["mongos", "--configdb", "configReplSet/configsvr1:27019,configsvr2:27019,configsvr3:27019", "--bind_ip_all"]
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  configsvr1:
+    image: mongo:latest
+    container_name: configsvr1
+    command: ["mongod", "--configsvr", "--replSet", "configReplSet", "--port", "27019", "--bind_ip_all"]
+    volumes:
+      - ./mongo/config/configsvr1-data:/data/configdb
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  configsvr2:
+    image: mongo:latest
+    container_name: configsvr2
+    command: ["mongod", "--configsvr", "--replSet", "configReplSet", "--port", "27019", "--bind_ip_all"]
+    volumes:
+      - ./mongo/config/configsvr2-data:/data/configdb
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  configsvr3:
+    image: mongo:latest
+    container_name: configsvr3
+    command: ["mongod", "--configsvr", "--replSet", "configReplSet", "--port", "27019", "--bind_ip_all"]
+    volumes:
+      - ./mongo/config/configsvr3-data:/data/configdb
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardSeoul1:
+    image: mongo:latest
+    container_name: shardSeoul1
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetSeoul", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/seoul/shardSeoul1-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardSeoul2:
+    image: mongo:latest
+    container_name: shardSeoul2
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetSeoul", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/seoul/shardSeoul2-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardSeoul3:
+    image: mongo:latest
+    container_name: shardSeoul3
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetSeoul", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/seoul/shardSeoul3-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardGunsan1:
+    image: mongo:latest
+    container_name: shardGunsan1
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetGunsan", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/gunsan/shardGunsan1-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardGunsan2:
+    image: mongo:latest
+    container_name: shardGunsan2
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetGunsan", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/gunsan/shardGunsan2-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardGunsan3:
+    image: mongo:latest
+    container_name: shardGunsan3
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetGunsan", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/gunsan/shardGunsan3-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardElse1:
+    image: mongo:latest
+    container_name: shardElse1
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetElse", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/else/shardElse1-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+    
+  shardElse2:
+    image: mongo:latest
+    container_name: shardElse2
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetElse", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/else/shardElse2-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+  shardElse3:
+    image: mongo:latest
+    container_name: shardElse3
+    command: ["mongod", "--shardsvr", "--replSet", "shardReplSetElse", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./mongo/else/shardElse3-data:/data/db
+    networks:
+      - mynetwork
+    restart: on-failure
+
+volumes:
+  central_db1-data:
+  central_db2-data:
+  central_db3-data:
+  configsvr1-data:
+  configsvr2-data:
+  configsvr3-data:
+  shardSeoul1-data:
+  shardSeoul2-data:
+  shardSeoul3-data:
+  shardGunsan1-data:
+  shardGunsan2-data:
+  shardGunsan3-data:
+  shardElse1-data:
+  shardElse2-data:
+  shardElse3-data:
+
+networks:
+  mynetwork:
+    driver: bridge
+
