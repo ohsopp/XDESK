@@ -48,12 +48,20 @@ XDesk는 사용자의 신체 포인트를 인식하여 책상과 모니터 거�
 
 ## 💻 사용 기술 및 환경
 
+### 🛠 하드웨어
+
 - 🖥 Nvidia Jetson Orin Nano  
 - 🍓 Raspberry Pi  
-- 🐧 Linux  
-- 📦 VirtualBox (개발 및 테스트 환경)  
-- 📸 OpenCV, TensorFlow (포즈 인식 및 영상 처리)  
-- ⚙️ 리니어 액추에이터 제어 (임베디드 하드웨어)  
+- ⚙️ 리니어 액추에이터 (임베디드 하드웨어)  
+
+### 🖥 소프트웨어
+
+- 🐧 Linux (운영체제)  
+- 💻 VirtualBox (개발 및 테스트 환경)  
+- 🛠 개발 언어: Python, C++ (임베디드 및 제어 로직)  
+- 📚 라이브러리 및 프레임워크:  
+  - OpenCV (영상 처리)  
+  - TensorFlow (자체 개발한 모션 인식 모델 기반) 
 
 <br/><br/>
 
